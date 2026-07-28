@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum NewsCategory {
+  Announcement
+  Advisory
+  Notice
+}
+
+enum ContactTopic {
+  visa
+  passport
+  registration
+  appointment
+  general
+}
+
+enum FeedbackType {
+  Suggestions
+  Comments
+}
+
+enum SubmissionStatus {
+  new
+  read
+  archived
+}
+
+model AdminUser {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model News {
+  id        String       @id @default(uuid())
+  slug      String       @unique
+  title     String
+  date      DateTime     @db.Date
+  category  NewsCategory
+  summary   String
+  body      String[]
+  published Boolean      @default(true)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+model ContactSubmission {
+  id        String           @id @default(uuid())
+  name      String
+  email     String
+  phone     String?
+  topic     ContactTopic
+  subject   String
+  message   String
+  status    SubmissionStatus @default(new)
+  createdAt DateTime         @default(now())
+}
+
+model FeedbackSubmission {
+  id        String           @id @default(uuid())
+  firstName String
+  lastName  String?
+  email     String
+  phone     String?
+  city      String?
+  country   String?
+  subject   String?
+  type      FeedbackType     @default(Suggestions)
+  message   String?
+  status    SubmissionStatus @default(new)
+  createdAt DateTime         @default(now())
+}
