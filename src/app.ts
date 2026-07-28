@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { config } from "./config.js";
 import { errorHandler } from "./middleware/errorHandler.js";
+import { authRouter } from "./routes/auth.js";
 
 export function createApp() {
   const app = express();
@@ -13,7 +14,7 @@ export function createApp() {
     res.json({ ok: true });
   });
 
-  // routes mounted in later tasks
+  app.use("/api/auth", authRouter);
 
   app.use(errorHandler);
   return app;
