@@ -5,6 +5,7 @@ import { errorHandler } from "./middleware/errorHandler.js";
 import { authRouter } from "./routes/auth.js";
 import { newsRouter } from "./routes/news.js";
 import { contactRouter } from "./routes/contact.js";
+import { feedbackRouter } from "./routes/feedback.js";
 import { adminRouter } from "./routes/admin/index.js";
 
 export function createApp() {
@@ -20,6 +21,7 @@ export function createApp() {
   app.use("/api/auth", authRouter);
   app.use("/api/news", newsRouter);
   app.use("/api/contact", contactRouter);
+  app.use("/api/feedback", feedbackRouter);
   app.use("/api/admin", adminRouter);
 
   app.use(errorHandler);
