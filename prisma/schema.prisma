@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -44,11 +44,11 @@ model AdminUser {
 model News {
   id        String       @id @default(uuid())
   slug      String       @unique
-  title     String
+  title     String       @db.VarChar(300)
   date      DateTime     @db.Date
   category  NewsCategory
-  summary   String
-  body      String[]
+  summary   String       @db.Text
+  body      Json
   published Boolean      @default(true)
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
@@ -60,8 +60,8 @@ model ContactSubmission {
   email     String
   phone     String?
   topic     ContactTopic
-  subject   String
-  message   String
+  subject   String           @db.VarChar(300)
+  message   String           @db.Text
   status    SubmissionStatus @default(new)
   createdAt DateTime         @default(now())
 }
@@ -74,9 +74,9 @@ model FeedbackSubmission {
   phone     String?
   city      String?
   country   String?
-  subject   String?
+  subject   String?          @db.VarChar(300)
   type      FeedbackType     @default(Suggestions)
-  message   String?
+  message   String?          @db.Text
   status    SubmissionStatus @default(new)
   createdAt DateTime         @default(now())
 }

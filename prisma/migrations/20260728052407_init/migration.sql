@@ -1,78 +1,63 @@
--- CreateEnum
-CREATE TYPE "NewsCategory" AS ENUM ('Announcement', 'Advisory', 'Notice');
+-- CreateTable
+CREATE TABLE `AdminUser` (
+    `id` VARCHAR(191) NOT NULL,
+    `email` VARCHAR(191) NOT NULL,
+    `passwordHash` VARCHAR(191) NOT NULL,
+    `name` VARCHAR(191) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
 
--- CreateEnum
-CREATE TYPE "ContactTopic" AS ENUM ('visa', 'passport', 'registration', 'appointment', 'general');
-
--- CreateEnum
-CREATE TYPE "FeedbackType" AS ENUM ('Suggestions', 'Comments');
-
--- CreateEnum
-CREATE TYPE "SubmissionStatus" AS ENUM ('new', 'read', 'archived');
+    UNIQUE INDEX `AdminUser_email_key`(`email`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE "AdminUser" (
-    "id" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "passwordHash" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+CREATE TABLE `News` (
+    `id` VARCHAR(191) NOT NULL,
+    `slug` VARCHAR(191) NOT NULL,
+    `title` VARCHAR(300) NOT NULL,
+    `date` DATE NOT NULL,
+    `category` ENUM('Announcement', 'Advisory', 'Notice') NOT NULL,
+    `summary` TEXT NOT NULL,
+    `body` JSON NOT NULL,
+    `published` BOOLEAN NOT NULL DEFAULT true,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
 
-    CONSTRAINT "AdminUser_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "News" (
-    "id" TEXT NOT NULL,
-    "slug" TEXT NOT NULL,
-    "title" TEXT NOT NULL,
-    "date" DATE NOT NULL,
-    "category" "NewsCategory" NOT NULL,
-    "summary" TEXT NOT NULL,
-    "body" TEXT[],
-    "published" BOOLEAN NOT NULL DEFAULT true,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "News_pkey" PRIMARY KEY ("id")
-);
+    UNIQUE INDEX `News_slug_key`(`slug`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE "ContactSubmission" (
-    "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "phone" TEXT,
-    "topic" "ContactTopic" NOT NULL,
-    "subject" TEXT NOT NULL,
-    "message" TEXT NOT NULL,
-    "status" "SubmissionStatus" NOT NULL DEFAULT 'new',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+CREATE TABLE `ContactSubmission` (
+    `id` VARCHAR(191) NOT NULL,
+    `name` VARCHAR(191) NOT NULL,
+    `email` VARCHAR(191) NOT NULL,
+    `phone` VARCHAR(191) NULL,
+    `topic` ENUM('visa', 'passport', 'registration', 'appointment', 'general') NOT NULL,
+    `subject` VARCHAR(300) NOT NULL,
+    `message` TEXT NOT NULL,
+    `status` ENUM('new', 'read', 'archived') NOT NULL DEFAULT 'new',
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
-    CONSTRAINT "ContactSubmission_pkey" PRIMARY KEY ("id")
-);
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE "FeedbackSubmission" (
-    "id" TEXT NOT NULL,
-    "firstName" TEXT NOT NULL,
-    "lastName" TEXT,
-    "email" TEXT NOT NULL,
-    "phone" TEXT,
-    "city" TEXT,
-    "country" TEXT,
-    "subject" TEXT,
-    "type" "FeedbackType" NOT NULL DEFAULT 'Suggestions',
-    "message" TEXT,
-    "status" "SubmissionStatus" NOT NULL DEFAULT 'new',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+CREATE TABLE `FeedbackSubmission` (
+    `id` VARCHAR(191) NOT NULL,
+    `firstName` VARCHAR(191) NOT NULL,
+    `lastName` VARCHAR(191) NULL,
+    `email` VARCHAR(191) NOT NULL,
+    `phone` VARCHAR(191) NULL,
+    `city` VARCHAR(191) NULL,
+    `country` VARCHAR(191) NULL,
+    `subject` VARCHAR(300) NULL,
+    `type` ENUM('Suggestions', 'Comments') NOT NULL DEFAULT 'Suggestions',
+    `message` TEXT NULL,
+    `status` ENUM('new', 'read', 'archived') NOT NULL DEFAULT 'new',
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
-    CONSTRAINT "FeedbackSubmission_pkey" PRIMARY KEY ("id")
-);
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- CreateIndex
-CREATE UNIQUE INDEX "AdminUser_email_key" ON "AdminUser"("email");
-
--- CreateIndex
-CREATE UNIQUE INDEX "News_slug_key" ON "News"("slug");
